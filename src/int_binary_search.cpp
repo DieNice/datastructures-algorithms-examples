@@ -1,45 +1,17 @@
-#include <iostream>
-using namespace std;
-
-int main() {
-  //Массив значений в котором пойдет поиск
-  int MyArray[]{1, 2, 4, 6, 7, 89, 123, 231, 1000, 1235};
-
-  int x = 0; //Текущая позиция массива, с которым сравнивается искомое
-  int a = 0; //Левая граница области, где ведется поиск
-  int b = 9; //Правая граница области, где ведется поиск
-
-  int WhatFind = 0; //Значение, которое нужно найти
-  bool found; //Переменка-флаг, принимающая True если искомое найдено
-
-  /************ Начало интерполяции *******************************/
-
-  //Цикл поиска по массиву, пока искомое не найдено
-  //или пределы поиска еще существуют
-  for (found = false;
-       (MyArray[a] < WhatFind) && (MyArray[b] > WhatFind) && !found;) {
-    //Вычисление интерполяцией следующего элемента, который будет сравниваться с
-    //искомым
-    x = a + ((WhatFind - MyArray[a]) * (b - a)) / (MyArray[b] - MyArray[a]);
-    //Получение новых границ области, если искомое не найдено
-    if (MyArray[x] < WhatFind)
-      a = x + 1;
-    else if (MyArray[x] > WhatFind)
-      b = x - 1;
+//интерполяционный бинарный поиск
+int Int_Search_Binary(int A[], int N, int key) {
+  int mid, left = 0, right = N - 1;
+  while (A[left] <= key && A[right] >= key) {
+    mid = left + ((key - A[left]) * (right - left)) / (A[right] - A[left]);
+    if (A[mid] < key)
+      left = mid + 1;
+    else if (A[mid] > key)
+      right = mid - 1;
     else
-      found = true;
+      return mid;
   }
-
-  /************** Конец интерполяции ***************************/
-
-  //Если искомое найдено на границах области поиска, показать на какой границе
-  //оно
-  if (MyArray[a] == WhatFind)
-    cout << WhatFind << " founded in element " << a << endl;
-  else if (MyArray[b] == WhatFind)
-    cout << WhatFind << " founded in element " << b << endl;
+  if (A[left] == key)
+    return left;
   else
-    cout << "Sorry. Not found" << endl;
-
-  return 0;
+    return -1;
 }

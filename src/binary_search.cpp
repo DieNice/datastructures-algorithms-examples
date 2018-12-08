@@ -1,7 +1,4 @@
-#include <iostream>
-using namespace std;
-
-// функция с алгоритмом двоичного поиска
+// функция двоичного поиска
 int Search_Binary(int arr[], int N, int key) {
   int m = 0; //середина вектора
   int l = 0; //нижняя граница

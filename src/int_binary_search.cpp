@@ -12,6 +12,7 @@ int Int_Search_Binary(int A[], int N, int key) {
   }
   if (A[l] == key)
     return l;
-  else
-    return -1;
+  if (A[r] == key)
+    return r;
+  return -1;
 }

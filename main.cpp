@@ -23,19 +23,25 @@ int main() {
   int array[N * N];
   int m = 1;
   for (int j = 0; j < N * N; j++) {
-    array[j] = m;
+    /*array[j] = m;
     cout << array[j] << " | ";
     if (m % N == 0) {
+      cout<<endl;}
+    m = m + 1;*/
+    cin >> array[j];
+  }
+  for (int j = 0; j < N * N; j++) {
+    cout << array[j] << " | ";
+    if ((j+1) % N == 0) {
       cout << endl;
     }
-    m = m + 1;
   }
   cout << endl;
   //Проверка массива на упорядоченность
-  if (Check_Ideal_Array(array, N) == false) {
-    cout << "Массив не упорядочен!" << endl;
-    return -1;
-  }
+//  if (Check_Ideal_Array(array, N) == false) {
+//    cout << "Массив не упорядочен!" << endl;
+//    return -1;
+//  }
 
   cout << "Введите ключ: " << endl;
   cin >> key;
@@ -48,7 +54,7 @@ int main() {
       vector[j] = array[j * (N + 1) + i];
       cout << " " << vector[j];
     }
-    index = Search_Binary(vector, N - i, key);
+    index = Int_Search_Binary(vector, N - i, key);
     if (index < 0) {
       cout << " Элемента нет в данном векторе";
     } else {

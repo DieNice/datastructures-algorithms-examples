@@ -2,6 +2,7 @@
 #include "src/i_b_s.h"
 #include <iomanip>
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 //функция проверки массива на упорядоченность
@@ -18,13 +19,17 @@ int main() {
   int N = 0; //размерность массива
   int key = 0;
   int index = 0; // позиция ключа в массиве
-  cout << "Введите размерность массива" << endl;
-  cin >> N;
-  if(N<2){cout<<"Слишком маленький массивчик";return -1; }
+  ifstream file;//переменная для файла
+  file.open("example.txt");
+  file >> N;
+  if (N < 2) {
+    cout << "Слишком маленький массивчик";
+    return -1;
+  }
   // заполняем и показываем массив размерности N*N
   int array[N * N];
   for (int j = 0; j < N * N; j++) {
-    cin >> array[j];
+    file >> array[j];
   }
   //Выводим введенный массив, но покрасивше
   for (int j = 0; j < N * N; j++) {
@@ -33,14 +38,14 @@ int main() {
       cout << endl;
     }
   }
-  cout << "Введите ключ: " << endl;
-  cin >> key;
-
-  int vector[N - 1]; //вектор параллельный главной диагонали
+  file >> key;
+  cout<<"key="<<key<<endl;
+  int vector[N]; //вектор параллельный главной диагонали
 
   //Поиск по ключу в векторах,которые диагонали паралелльные главной
-  for (int i = 1; i < N; i++) {
-    cout << "\nВектор выше главной диагонали номер " << i << ":";
+  cout << "Бинарный поиск";
+  for (int i = 0; i < N; i++) {
+    cout << "\nВектор выше главной №" << i << ":";
     for (int j = 0; j < (N - i); j++) {
       vector[j] = array[j * (N + 1) + i];
       cout << " " << vector[j];
@@ -52,9 +57,10 @@ int main() {
       } else {
         cout << "  Индекс=" << index << "," << index + i;
       }
-    } else
+    } else {
       cout << "Вектор не упорядочен!";
-    cout << "\nВектор ниже главной диагонали номер " << i << ":";
+    }
+    cout << "\nВектор ниже главной №" << i << ":";
     for (int j = 0; j < (N - i); j++) {
       vector[j] = array[j * (N + 1) + i * N];
       cout << " " << vector[j];
@@ -69,5 +75,38 @@ int main() {
     } else
       cout << "Вектор не упорядочен!";
   }
+  cout << "\nИнтерполяционный бинарный поиск";
+  for (int i = 0; i < N; i++) {
+    cout << "\nВектор выше главной №" << i << ":";
+    for (int j = 0; j < (N - i); j++) {
+      vector[j] = array[j * (N + 1) + i];
+      cout << " " << vector[j];
+    }
+    if (Check_Ideal_Array(vector, N - i) == true) {
+      index = Int_Search_Binary(vector, N - i, key);
+      if (index < 0) {
+        cout << " Элемента нет в данном векторе";
+      } else {
+        cout << "  Индекс=" << index << "," << index + i;
+      }
+    } else {
+      cout << "Вектор не упорядочен!";
+    }
+    cout << "\nВектор ниже главной №" << i << ":";
+    for (int j = 0; j < (N - i); j++) {
+      vector[j] = array[j * (N + 1) + i * N];
+      cout << " " << vector[j];
+    }
+    if (Check_Ideal_Array(vector, N - i) == true) {
+      index = Int_Search_Binary(vector, N - i, key);
+      if (index < 0) {
+        cout << " Элемента нет в данном векторе";
+      } else {
+        cout << "  Индекс=" << index + i << "," << index;
+      }
+    } else
+      cout << "Вектор не упорядочен!";
+  }
+  file.close();
   return 0;
 }

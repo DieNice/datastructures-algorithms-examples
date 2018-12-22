@@ -1,7 +1,5 @@
-#ifndef IDZ3_SORT_LIB_H
-#define IDZ3_SORT_LIB_H
-
-
-void heapSort(long int *numbers,long int array_size);
-
-#endif //IDZ3_SORT_LIB_H
+#ifndef IDZ3_SORT_HEAPSORT
+#define IDZ3_SORT_HEAPSORT
+void heapSort(int *numbers, int array_size);
+void ShellSort(int *A, int n);
+#endif // IDZ3_SORT_HEAPSORT

@@ -1,6 +1,7 @@
 //интерполяционный бинарный поиск
 int Int_Search_Binary(int A[], int N, int key) {
   int m, l = 0, r = N - 1;
+
   while (A[l] < key && A[r] > key) {
     m = l + ((key - A[l]) * (r - l)) / (A[r] - A[l]);
     if (A[m] < key)

@@ -1,10 +1,13 @@
 #include <iostream>
 using namespace std;
+
 int sw = 0;
 int eq = 0;
+
 void ShellSort(int *A, int n) //сортировка Шелла
 {
   int i, j, d, count;
+
   d = n;
   d = d / 2;
   while (d > 0) {

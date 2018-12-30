@@ -1,15 +1,20 @@
 #include <iostream>
 using namespace std;
+
 int swp = 0; //кол-во свапов
 int eql = 0; //кол-во сравнений
+
 // Функция "просеивания" через кучу - формирование кучи
 void siftDown(int *numbers, int root, int bottom) {
   int maxChild; // индекс максимального потомка
   int done = 0; // флаг того, что куча сформирована
+
   // Пока не дошли до последнего ряда
   while ((root * 2 + 1 <= bottom) && (!done)) {
-    if (root * 2 + 1 == bottom) // если мы в последнем ряду,
-      maxChild = root * 2 + 1; // запоминаем левый потомок
+    if (root * 2 + 1 == bottom) { // если мы в последнем ряду,
+      maxChild = root * 2 + 1;
+      eql++;
+    } // запоминаем левый потомок
     // иначе запоминаем больший потомок из двух
     else if (numbers[root * 2 + 1] > numbers[root * 2 + 2])
       maxChild = root * 2 + 1;

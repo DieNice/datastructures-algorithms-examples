@@ -10,10 +10,10 @@ int main() {
     cout << "Введите размер множества" << endl;
     cin >> size;
 
-    int *array = new int[size + 1];
+    int *array = new int[size];
 
     cout << "Введите множество целых чисел" << endl;
-    for (int i = 1; i <= size; i++) {
+    for (int i = 0; i < size; i++) {
         cin >> array[i];
     }
 

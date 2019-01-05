@@ -5,7 +5,7 @@ using namespace std;
 bool check_array(int *Array, int size) {
     bool flag = false;
 
-    for (int i = 1; i < size; i++) {
+    for (int i = 0; i < size - 1; i++) {
         for (int j = i + 1; j <= size; j++) {
             if (Array[i] == Array[j]) {
                 flag = true;
@@ -32,14 +32,14 @@ void Effect(int *vector, int size) {
         d[i] = -1;
     }
     d[1] = 0;
-    z[0] = z[size + 1] = m = size + 1;
-    k = 0;
+    z[0] = z[size + 1] = m = size + 1; //метки границы
+    k = 0;//счётчик числа перестановок
 
     //printf permutations
     while (m != 1) {
         k++;
-        cout << "\n" << k<<")";
-        for (i = 1; i <= size; i++) { cout << z[i]; }
+        cout << "\n" << k << ")";
+        for (i = 1; i <= size; i++) { cout << vector[z[i] - 1]; }
         m = size;
         while (z[p[m] + d[m]] > m) {
             d[m] = -d[m];

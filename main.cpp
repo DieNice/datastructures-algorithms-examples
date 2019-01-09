@@ -22,6 +22,8 @@ int main() {
             return -1;
         }
 
+        file.seekg(0, ios::beg);
+
         while (!file.eof()) {
             int buf;
             file >> buf;

@@ -1,27 +1,21 @@
 #include <iostream>
+#include <set>
 
 using namespace std;
 
-bool check_array(int *Array, int size) {
-    bool flag = false;
-
-    for (int i = 0; i < size - 1; i++) {
-        for (int j = i + 1; j <= size; j++) {
-            if (Array[i] == Array[j]) {
-                flag = true;
-                i = size;
-                j = i + 1;
-            }
-        }
-    }
-    return flag;
-};
-
-void Effect(int *vector, int size) {
+void Effect(set<int> mySet, int size) {
     int *z, *p, *d;
     unsigned int k;
     int pm, dm, zpm;
     int i, m, w;
+
+    int arr[mySet.size()];//массив с элементами множества
+
+    set<int>::iterator it = mySet.begin();
+    for (int i = 0; i < mySet.size(); i++) {
+        arr[i] = *it;
+        it++;
+    }
 
     z = (int *) malloc((size + 2) * sizeof(int)); //перестановка
     p = (int *) malloc((size + 2) * sizeof(int)); //обратная
@@ -39,7 +33,8 @@ void Effect(int *vector, int size) {
     while (m != 1) {
         k++;
         cout << "\n" << k << ")";
-        for (i = 1; i <= size; i++) { cout << vector[z[i] - 1]; }
+
+        for (i = 1; i <= size; i++) { cout << arr[z[i] - 1]; }//
         m = size;
         while (z[p[m] + d[m]] > m) {
             d[m] = -d[m];

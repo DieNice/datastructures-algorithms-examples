@@ -1,24 +1,34 @@
-
 #include <iostream>
 #include "src/Permutations.h"
+#include <set>
+#include <fstream>
 
 using namespace std;
 
 int main() {
-    unsigned int size = 0;
+    set<int> mySet;//пустое множество
 
-    cout << "Введите размер множества" << endl;
-    cin >> size;
+    ifstream file("/home/denis/git/DSA/input.txt");
 
-    int *array = new int[size];
+    if (file.is_open()) {
+        cout << "Файл открыт!";
 
-    cout << "Введите множество целых чисел" << endl;
-    for (int i = 0; i < size; i++) {
-        cin >> array[i];
+        while (!file.eof()) {
+            int buf;
+            file >> buf;
+            mySet.insert(buf);
+        }
+
+        if (mySet.size() != 0) {
+            Effect(mySet, mySet.size());
+        } else {
+            cout << "Множество пустое!";
+            return -1;
+        }
+    } else {
+        cout << "Файл не открыт!" << endl;
+        return -1;
     }
 
-    if (!check_array(array, size)) {
-        Effect(array, size);
-    } else cout << "Множество содержит повторяющиеся элементы!";
     return 0;
 }

@@ -13,6 +13,15 @@ int main() {
     if (file.is_open()) {
         cout << "Файл открыт!";
 
+        int file_size;
+        file.seekg(0, ios::end);
+        file_size = file.tellg();
+        if (file_size == 0) {
+            cout << "А файл то пуст :D" << endl;
+            file.close();
+            return -1;
+        }
+
         while (!file.eof()) {
             int buf;
             file >> buf;

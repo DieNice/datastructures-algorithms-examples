@@ -3,9 +3,10 @@
 
 using namespace std;
 
-Hashtable::Hashtable(unsigned int size, double kof) {
+Hashtable::Hashtable(unsigned int size, double koef) {
     N = size;
-    k = kof;
+    k = koef;
+
     table = new struct Record[N];
     status = new bool[N];
     for (int i = 0; i < N; i++) {
@@ -14,7 +15,8 @@ Hashtable::Hashtable(unsigned int size, double kof) {
 }
 
 Hashtable::~Hashtable() {
-
+    delete table;
+    delete status;
 }
 
 
@@ -39,14 +41,25 @@ unsigned int Hashtable::get_hash_two(unsigned int hash, unsigned int i) {
     return (hash + i * i) % N;
 }
 
+double Hashtable::count_koef() {
+    int count = 0;
+    for (int i = 0; i < N; i++) {
+        if (status[i] == true) { count++; }
+    }
+
+    return ((count + 1) / (double) N) * 100; //now koef of full
+
+}
+
 bool Hashtable::add(Record record) {
     double k_full;
     unsigned int hash_1;
 
-    k_full = ((count + 1) / (double) N) * 100; //now kof of full
+    k_full = this->count_koef();
 
     if (k_full > k) {
-        //rehashing();
+        /*inc_size();
+        rehashing();*/
     }
 
     hash_1 = get_hash_one(record);
@@ -55,7 +68,6 @@ bool Hashtable::add(Record record) {
         table[hash_1].key = record.key;
         table[hash_1].data = record.data;
         status[hash_1] = true;
-        count++;
 
         return 0;
     } else {
@@ -69,8 +81,6 @@ bool Hashtable::add(Record record) {
                 table[hash_2].key = record.key;
                 table[hash_2].data = record.data;
                 status[hash_2] = true;
-                count++;
-
                 return 0;
             }
         }
@@ -79,13 +89,23 @@ bool Hashtable::add(Record record) {
     }
 }
 
+bool Hashtable::remove(Record record) {
+    int num = search(record);
+
+    if (num == N) { return true; }
+    status[num] = false;
+    //red_size;
+    //rehashing
+}
+
+
 void Hashtable::print() {
 
     cout << "            HashTable" << endl;
     cout << "----------------------------------" << endl;
 
     for (int i = 0; i < N; i++) {
-        if (status[i] == !0) {
+        if (status[i] == !false) {
             cout << i << ")" << table[i].key << " " << table[i].data << endl;
             cout << "----------------------------------" << endl;
         } else {
@@ -95,4 +115,63 @@ void Hashtable::print() {
     }
 }
 
-void Hashtable::rehashing() {}
+void Hashtable::rehashing() {
+
+    for (int i = 0; i < N; i++) {
+
+        if (status[i] == true) {
+            int hash_1 = get_hash_one(table[i]);
+            if (hash_1 != i) {
+
+                if (status[hash_1] == !true) {
+                    table[hash_1].key = table[i].key;
+                    table[hash_1].data = table[i].data;
+                    status[hash_1] = true;
+                    status[i] = false;
+                } else {
+
+                    for (int j = 1; j < N; j++) {
+
+                        int hash_2 = get_hash_two(hash_1, j);
+
+                        if (table[hash_2].key == table[i].key) { j = N; }
+                        else {
+
+                            if (status[hash_2] == !true) {
+                                table[hash_2].key = table[i].key;
+                                table[hash_2].data = table[i].data;
+                                status[hash_2] = true;
+                                status[i] = false;
+                            }
+                        }
+                    }
+
+                }
+
+
+            }
+        }
+    }
+}
+
+unsigned int Hashtable::search(Record record) {
+    unsigned int hash_1;
+    hash_1 = get_hash_one(record);
+    if (status[hash_1] == true) {
+        if (table[hash_1].key == record.key) {
+            return hash_1;
+        }
+    }
+    //if nщt found by hash_1
+    for (int i = 1; i < N; i++) {
+
+        int hash_2 = get_hash_two(hash_1, i);
+
+        if (status[hash_2] == true) {
+            if (table[hash_2].key == record.key) {
+                return hash_2;
+            }
+        }
+    }
+    return N;//null string of table
+}

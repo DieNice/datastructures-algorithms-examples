@@ -5,11 +5,13 @@
 #ifndef HASHTABLE_HASHTABLE_H
 #define HASHTABLE_HASHTABLE_H
 
+#include <string>
+
 struct Record {
 
     unsigned int key;
 
-    char *data = new char[10];
+    std::string data;
 };
 
 class Hashtable {
@@ -26,11 +28,11 @@ private:
 
     unsigned int get_hash_two(unsigned int, unsigned int); //function hash 2 +
 
-    double count_koef();//count coefficient of full +
+    double count_koef(int);//count coefficient of full +
 
-    void inc_size();//increase size of table
+    void inc_size();//increase size of table +
 
-    void red_size();//reduce size of table
+    void red_size();//reduce size of table +
 
     void rehashing(); //rehash all table and up size of table +
 
@@ -39,9 +41,9 @@ public:
 
     ~Hashtable();//+
 
-    bool add(Record);//+-
+    bool add(Record);//+
 
-    bool remove(Record);//+-
+    bool remove(Record);//+
 
     unsigned int search(Record);//+
 

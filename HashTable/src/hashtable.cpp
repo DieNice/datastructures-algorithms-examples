@@ -41,25 +41,29 @@ unsigned int Hashtable::get_hash_two(unsigned int hash, unsigned int i) {
     return (hash + i * i) % N;
 }
 
-double Hashtable::count_koef() {
+double Hashtable::count_koef(int size) {
     int count = 0;
     for (int i = 0; i < N; i++) {
         if (status[i] == true) { count++; }
     }
 
-    return ((count + 1) / (double) N) * 100; //now koef of full
+    return ((count) / (double) size) * 100; //now koef of full
 
 }
 
 bool Hashtable::add(Record record) {
+
+    if ((this->search(record)) != N) { return true; }
+
+
     double k_full;
     unsigned int hash_1;
 
-    k_full = this->count_koef();
+    k_full = this->count_koef(N);
 
     if (k_full > k) {
-        /*inc_size();
-        rehashing();*/
+        inc_size();
+        rehashing();
     }
 
     hash_1 = get_hash_one(record);
@@ -94,8 +98,11 @@ bool Hashtable::remove(Record record) {
 
     if (num == N) { return true; }
     status[num] = false;
-    //red_size;
-    //rehashing
+    if (count_koef(N / 2) < k) {
+        red_size();
+    }
+    rehashing();
+    return 0;
 }
 
 
@@ -174,4 +181,34 @@ unsigned int Hashtable::search(Record record) {
         }
     }
     return N;//null string of table
+}
+
+void Hashtable::inc_size() {
+    struct Record *table_buf = new struct Record[N * 2];
+    bool *status_buf = new bool[N * 2];
+
+    for (int i = 0; i < N; i++) {
+        table_buf[i] = table[i];
+        status_buf[i] = status[i];
+    }
+    delete[] table;
+    table = table_buf;
+    delete[] status;
+    status = status_buf;
+    N = N * 2;
+}
+
+void Hashtable::red_size() {
+    struct Record *table_buf = new struct Record[N / 2];
+    bool *status_buf = new bool[N / 2];
+
+    for (int i = 0; i < N; i++) {
+        table_buf[i] = table[i];
+        status_buf[i] = status[i];
+    }
+    delete[] table;
+    table = table_buf;
+    delete[] status;
+    status = status_buf;
+    N = N / 2;
 }

@@ -7,16 +7,22 @@ Hashtable::Hashtable(unsigned int size, double koef) {
     N = size;
     k = koef;
 
+    if (N <= min_size) { throw UNCCORECT_SIZE; }
+    if (k < min_k || k > max_k) { throw UNCCORECT_KOEF; }
+
     table = new struct Record[N];
     status = new bool[N];
     for (int i = 0; i < N; i++) {
-        status[i] = 0;
+        status[i] = false;
     }
+
 }
 
 Hashtable::~Hashtable() {
-    delete table;
-    delete status;
+    if (N > min_size && (k >= min_k && k <= max_k)) {
+        delete[] table;
+        delete[] status;
+    }
 }
 
 
@@ -53,13 +59,14 @@ double Hashtable::count_koef(int size) {
 
 bool Hashtable::add(Record record) {
 
-    if ((this->search(record)) != N) { return true; }
+    if (record.key < min_key || record.key > max_key) { throw UNCCRORECT_KEY; }
+    if ((search(record)) != N) { throw RECORD_EXISTS; }
 
 
     double k_full;
     unsigned int hash_1;
 
-    k_full = this->count_koef(N);
+    k_full = count_koef(N);
 
     if (k_full > k) {
         inc_size();
@@ -88,20 +95,22 @@ bool Hashtable::add(Record record) {
                 return 0;
             }
         }
-        cout << "Can't add item:" << record.key << " " << record.data << endl;
-        return 1;
+        throw HASH_CANT;
     }
 }
 
 bool Hashtable::remove(Record record) {
-    int num = search(record);
 
-    if (num == N) { return true; }
+    int num = search(record);
+    if (num == N) { throw RECORD_NOT_EXISTS; }
+
     status[num] = false;
-    if (count_koef(N / 2) < k) {
+    double k_empty = count_koef(N / 2);
+
+    if (k_empty < k) {
         red_size();
-    }
-    rehashing();
+    } else rehashing();
+
     return 0;
 }
 
@@ -117,7 +126,7 @@ void Hashtable::print() {
             cout << "----------------------------------" << endl;
         } else {
             cout << i << ") empty" << endl;
-            cout << "----------------------------------" << endl;
+             cout << "----------------------------------" << endl;
         }
     }
 }
@@ -199,16 +208,33 @@ void Hashtable::inc_size() {
 }
 
 void Hashtable::red_size() {
-    struct Record *table_buf = new struct Record[N / 2];
-    bool *status_buf = new bool[N / 2];
+    struct Record *table_result = new struct Record[N / 2];
+    bool *status_result = new bool[N / 2];
+
+    for (int i = 0; i < N / 2; i++) { status_result[i] = false; }
+
+    struct Record *table_buf = new struct Record[N];
+    bool *status_buf = new bool[N];
 
     for (int i = 0; i < N; i++) {
         table_buf[i] = table[i];
         status_buf[i] = status[i];
     }
     delete[] table;
-    table = table_buf;
+    table = table_result;
     delete[] status;
-    status = status_buf;
+    status = status_result;
+
+    unsigned int old_size = N;
     N = N / 2;
+
+    for (int i = 0; i < old_size; i++) {
+        if (status_buf[i] != false) {
+            this->add(table_buf[i]);
+        }
+    }
+    delete[] table_buf;
+    delete[] status_buf;
+
+
 }

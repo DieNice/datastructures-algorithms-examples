@@ -1,47 +1,36 @@
 #include <iostream>
 #include "src/hashtable.h"
+#include <string>
 
 using namespace std;
 
 int main() {
-    Hashtable example(10, 50);
-    Record a;
-    a.key = 350000;
-    a.data = (char *) "PDA";
+    try {
+        Hashtable table(10, 80);
+        Record record;
+        record.key = 350600;
+        record.data = "PDA";
+        for (int i = 1; i < 5; i++) {
+            table.add(record);
+            record.key += 2;
+            record.data[2]++;
 
-    for (int i = 1; i < 10; i++) {
-        example.add(a);
-        a.key += 2;
-        a.data[2]++;
+        }
+        record.key = 530606;
+        record.data = "NEW_PDD";
+        table.add(record);
+        table.print();
+
+        record.key = 350606;
+        record.data = "PDD";
+        table.remove(record);
+        table.print();
+
 
     }
-
-    example.print();
-
-    a.key = 350000;
-    a.data = (char *) "PDA";
-
-    for (int i = 1; i < 5; i++) {
-        example.remove(a);
-        a.key += 2;
-        a.data[2]++;
-
+    catch (errors err) {
+        cout << "Error#" << err << endl;
     }
-
-    example.print();
-
-
-    a.key = 350000;
-    a.data = (char *) "PDA";
-
-    for (int i = 1; i < 10; i++) {
-        example.add(a);
-        a.key += 2;
-        a.data[2]++;
-
-    }
-
-    example.print();
 
     return 0;
 }

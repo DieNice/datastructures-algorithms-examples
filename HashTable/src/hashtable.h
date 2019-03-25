@@ -8,7 +8,7 @@
 #include <string>
 
 enum errors {
-    UNCCORECT_SIZE = 1, UNCCORECT_KOEF, UNCCRORECT_KEY, RECORD_EXISTS, HASH_CANT, RECORD_NOT_EXISTS
+    UNCCRORECT_KEY=1, RECORD_EXISTS, HASH_CANT, RECORD_NOT_EXISTS
 };
 
 struct Record {
@@ -27,6 +27,7 @@ private:
     const unsigned int max_key = 999999;
 
     unsigned int N; //size of table
+    unsigned int default_N; //size of table
 
     double k; //koefficient of full 60%..80%
 
@@ -46,14 +47,16 @@ private:
 
     void rehashing(); //rehash all table
 
+    unsigned int search_key(Record);
+
 public:
     Hashtable(unsigned int, double);
 
     ~Hashtable();
 
-    bool add(Record);
+    unsigned short add(Record);
 
-    bool remove(Record);
+    unsigned short remove(Record);
 
     unsigned int search(Record);
 

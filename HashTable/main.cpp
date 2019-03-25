@@ -5,32 +5,33 @@
 using namespace std;
 
 int main() {
-    try {
-        Hashtable table(10, 80);
+        Hashtable table(5, 80);
         Record record;
-        record.key = 350600;
+        record.key = 810000;
         record.data = "PDA";
-        for (int i = 1; i < 5; i++) {
-            table.add(record);
+    unsigned char k;
+        for (int i = 1; i < 3; i++) {
+          k=  table.add(record);
+            if (k) cout <<"ERROR"<<endl;
             record.key += 2;
             record.data[2]++;
 
         }
-        record.key = 530606;
-        record.data = "NEW_PDD";
-        table.add(record);
+
+
+
         table.print();
 
-        record.key = 350606;
-        record.data = "PDD";
+    for (int i = 0; i < 3; i++) {
         table.remove(record);
+        record.key -= 2;
+        record.data[2]--;
+
+    }
+
+
+
         table.print();
-
-
-    }
-    catch (errors err) {
-        cout << "Error#" << err << endl;
-    }
 
     return 0;
 }

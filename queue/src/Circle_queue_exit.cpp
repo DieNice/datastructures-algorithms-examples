@@ -2,11 +2,10 @@
 // Created by pda on 07.04.19.
 //
 #include <iostream>
-
 #include "Circle_queue_exit.h"
 
 Circle_queue_exit::Circle_queue_exit(unsigned int size) {
-    const int def_size = 10;
+    const unsigned int def_size = 10;
     const int one = 1;
 
     if (size <= one) {
@@ -41,6 +40,7 @@ unsigned int Circle_queue_exit::add(element el) {
 
 unsigned int Circle_queue_exit::print() {
     if (length() == 0) { return 2; }//queue empty
+
     for (int i = left; i <= right; i++) {
         std::cout << vector[(i + max_l) % max_l].priority << "|" << vector[(i + max_l) % max_l].data << std::endl;
 
@@ -49,7 +49,7 @@ unsigned int Circle_queue_exit::print() {
 
 unsigned int Circle_queue_exit::length() {
     if (right - left + 1 > max_l) { return 0; }
-    return (right - left + 1);
+    else return (right - left + 1);
 }
 
 unsigned int Circle_queue_exit::del() {
@@ -61,6 +61,7 @@ unsigned int Circle_queue_exit::del() {
         left = 0;
         right = max_l;
     } else {
+
         int num_priority = left;
 
         for (int i = left; i <= right; i++) {
@@ -68,6 +69,7 @@ unsigned int Circle_queue_exit::del() {
                 num_priority = i;
             }
         }
+
         if (num_priority > (left + right) / 2) { move_left(num_priority); }
         else { move_right(num_priority); }
     }
@@ -75,7 +77,7 @@ unsigned int Circle_queue_exit::del() {
 
 }
 
-element Circle_queue_exit::read(unsigned int deep) {
+element Circle_queue_exit::read() {
     if (length() == 0) {
         element empty;
         empty.data = "empty";
@@ -83,67 +85,75 @@ element Circle_queue_exit::read(unsigned int deep) {
         return empty;
     }
 
-    struct element *buf = new struct element[max_l + 1];
-
-    for (int i = 0; i < max_l; i++) { buf[i] = vector[i]; }
-
-    deep = deep % length();
-    for (int j = 0; j < deep; j++) {
-        del();
-    }
-
     int num_priority = left;
 
     for (int i = left; i <= right; i++) {
-        if (vector[(i + max_l) % max_l].priority > vector[num_priority].priority) {
+
+        if (vector[(i + max_l) % max_l].priority >= vector[num_priority].priority) {
             num_priority = i;
         }
     }
-    for (int i = 0; i < max_l; i++) { vector[i] = buf[i]; }
-    delete[] buf;
+
     return vector[num_priority];
 
 }
 
 void Circle_queue_exit::move_left(const unsigned int pos) {
+
     for (int i = 0; i < right - pos; i++) {
         vector[i + pos] = vector[i + pos + 1];
     }
+
     right = right - 1;
 
 }
 
 void Circle_queue_exit::move_right(const unsigned int pos) {
+
     for (int i = 0; i < pos - left; i++) {
         vector[pos - i] = vector[pos - i - 1];
     }
+
     left = left + 1;
 
 }
 
 Circle_queue_exit::Circle_queue_exit(const Circle_queue_exit &obj) {
+
     max_l = obj.max_l;
     vector = new struct element[max_l + 1];
+
     for (int i = 0; i < max_l + 1; i++) {
         vector[i] = obj.vector[i];
     }
+
     right = obj.right;
     left = obj.left;
 }
 
 void Circle_queue_exit::operator=(Circle_queue_exit &obj) {
-    if (obj.max_l <= max_l) {
-        for (int i = 0; i <= obj.max_l; i++) {
-            vector[i] = obj.vector[i];
-        }
-        left = obj.left;
-        right = obj.right;
-    } else {
-        for (int i = obj.left; i < max_l + obj.left; i++) {
-            vector[i - obj.left] = obj.vector[i];
-        }
-        left = 0;
-        right = max_l - 1;
 
+    if (obj.length() == 0) {
+        left = 0;
+        right = max_l;
+    } else {
+        if (obj.max_l <= max_l) {
+            for (int i = 0; i <= obj.max_l; i++) {
+                vector[i] = obj.vector[i];
+            }
+
+            left = obj.left;
+            right = obj.right;
+
+        } else {
+
+            for (int i = obj.left; i < max_l + obj.left; i++) {
+                vector[i - obj.left] = obj.vector[i];
+            }
+
+            left = 0;
+            right = max_l - 1;
+
+        }
     }
 }

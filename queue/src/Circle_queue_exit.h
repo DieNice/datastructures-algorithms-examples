@@ -36,7 +36,7 @@ public:
 
     unsigned int del();
 
-    element read(unsigned int deep);
+    element read();
 
     unsigned int length();
 

@@ -41,10 +41,17 @@ unsigned int Circle_queue_exit::add(element el) {
 unsigned int Circle_queue_exit::print() {
     if (length() == 0) { return 2; }//queue empty
 
+    cout << "head=" << (left + max_l) % max_l << " tail=" << (right + max_l) % max_l << endl;
+
     for (int i = left; i <= right; i++) {
-        std::cout << vector[(i + max_l) % max_l].priority << "|" << vector[(i + max_l) % max_l].data << std::endl;
+        cout << "|" << vector[(i + max_l) % max_l].priority << vector[(i + max_l) % max_l].data;
 
     }
+    cout << endl;
+    for (int i = left; i <= right; i++) {
+        cout << "|" << "#" << (i + max_l) % max_l;
+    }
+    cout << endl;
 }
 
 unsigned int Circle_queue_exit::length() {
@@ -54,7 +61,7 @@ unsigned int Circle_queue_exit::length() {
 
 unsigned int Circle_queue_exit::del() {
 
-    if (length() == 0) { return 2; }//queue empty
+    if (length() == 0) { return 2; }//queue emptyS
 
 
     if (length() == 1) {
@@ -131,7 +138,7 @@ Circle_queue_exit::Circle_queue_exit(const Circle_queue_exit &obj) {
     left = obj.left;
 }
 
-void Circle_queue_exit::operator=(Circle_queue_exit &obj) {
+Circle_queue_exit &Circle_queue_exit::operator=(Circle_queue_exit &obj) {
 
     if (obj.length() == 0) {
         left = 0;
@@ -156,4 +163,5 @@ void Circle_queue_exit::operator=(Circle_queue_exit &obj) {
 
         }
     }
+    return *this;
 }

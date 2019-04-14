@@ -42,7 +42,7 @@ public:
 
     unsigned int print();
 
-    void operator =(Circle_queue_exit&);
+    Circle_queue_exit& operator =(Circle_queue_exit&);
 
 
 };

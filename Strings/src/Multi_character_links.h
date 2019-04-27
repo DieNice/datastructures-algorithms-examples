@@ -18,6 +18,8 @@ class Multi_character_links {
 private:
     Link *Head, *Tail;
 
+    void add_elem(char *const data, unsigned int size);
+
 public:
     Multi_character_links() : Head(nullptr), Tail(nullptr) {
     };
@@ -30,11 +32,11 @@ public:
 
     friend std::ostream &operator<<(std::ostream &out, const Multi_character_links &obj);
 
-    Multi_character_links &operator=(Multi_character_links data);
+    Multi_character_links &operator=(Multi_character_links &data);
 
     Multi_character_links &operator=(const char *const data);
 
-    Multi_character_links &operator+(Multi_character_links data);
+    Multi_character_links &operator+(Multi_character_links &data);
 
     Multi_character_links &operator+(const char *const data);
 
@@ -46,7 +48,7 @@ public:
 
     Multi_character_links del(unsigned int k, unsigned int n);
 
-
+    void print();
 };
 
 

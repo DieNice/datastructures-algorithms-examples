@@ -39,7 +39,7 @@ Multi_character_links::Multi_character_links(const char *const data) {
         memcpy(substr, &data[left], size - 1);
 
 
-        substr[size] = '\0';
+        substr[size - 1] = '\0';
 
         add_elem(substr, size);
 
@@ -71,8 +71,33 @@ void Multi_character_links::add_elem(char *const data, unsigned int size) {
 }
 
 Multi_character_links::Multi_character_links(const Multi_character_links &obj) {
-    Head = obj.Head;
-    Tail = obj.Tail;
+    this->Head = nullptr;
+    this->Tail = nullptr;
+
+    if (!(obj.Head == obj.Tail && obj.Head == nullptr)) {
+
+
+        Link *buf = obj.Head;
+
+
+        while (buf != nullptr) {
+            Link *temp = new Link;
+            temp->data = buf->data;
+
+            if (Head != nullptr) {
+                temp->Prev = Tail;
+                Tail->Next = temp;
+                Tail = temp;
+            } else //Если список пустой
+            {
+                temp->Prev = nullptr;
+                Head = Tail = temp;
+            }
+
+            buf = buf->Next;
+        }
+    }
+
 }
 
 //
@@ -131,8 +156,18 @@ Multi_character_links &Multi_character_links::operator=(const char *const data) 
 
 
 Multi_character_links &Multi_character_links::operator=(Multi_character_links &data) {
-    Head = data.Head;
-    Tail = data.Tail;
+
+
+    while (Head) {
+        Tail = Head->Next;
+        delete Head;
+        Head = Tail;
+
+    }
+
+    this->Head = data.Head;
+    this->Tail = data.Tail;
+
 }
 
 std::ostream &operator<<(std::ostream &out, const Multi_character_links &obj) {
@@ -145,11 +180,10 @@ std::ostream &operator<<(std::ostream &out, const Multi_character_links &obj) {
 }
 
 void Multi_character_links::print() {
-    Link *temp = Head;                       //Временно указываем на адрес первого элемента
-    while (temp != nullptr)              //Пока не встретим пустое значение
-    {
-        cout << temp->data << "|";        //Выводим каждое считанное значение на экран
-        temp = temp->Next;             //Смена адреса на адрес следующего элемента
+    Link *temp = Head;
+    while (temp != nullptr) {
+        cout << temp->data << "|";
+        temp = temp->Next;
     }
     cout << "\n";
 
@@ -157,23 +191,187 @@ void Multi_character_links::print() {
 
 Multi_character_links &Multi_character_links::operator+(Multi_character_links &data) {
 
-    Multi_character_links *Res;
-    Res = this;
+    Multi_character_links *Res(this);
 
-    Res->Tail->Next = data.Head;
-    Res->Tail = data.Tail;
+    Multi_character_links *Buf = new Multi_character_links(data);
+
+    if (Res->Head == Res->Tail && Res->Head == nullptr) {
+
+        return *Buf;
+    }
+
+    if (Buf->Head == Buf->Tail && Buf->Head == nullptr) {
+
+        return *Res;
+    }
+
+
+    Res->Tail->Next = Buf->Head;
+    Res->Tail = Buf->Tail;
+
     return *Res;
 
 }
 
 Multi_character_links &Multi_character_links::operator+(const char *const data) {
 
-    Multi_character_links Sub(data);
-    Multi_character_links *Res;
-    Res = this;
+    Multi_character_links *Res(this);
 
-    Res->Tail->Next = Sub.Head;
-    Res->Tail = Sub.Tail;
+    Multi_character_links *Buf = new Multi_character_links(data);
+
+    Res->Tail->Next = Buf->Head;
+    Res->Tail = Buf->Tail;
 
     return *Res;
+}
+
+unsigned int Multi_character_links::length() {
+    Link *temp = Head;
+    unsigned int count = 0;
+
+    while (temp != nullptr) {
+        count = count + strlen(temp->data);
+        temp = temp->Next;
+
+    }
+    return count;
+}
+
+int search_string(char *string1, char *string2) {
+    if (strlen(string2) > strlen(string1)) { return -1; }
+
+    if ((strlen(string1) == strlen(string2)) && strcmp(string1, string2) == 0) { return 0; }
+
+    for (int i = 0; i <= strlen(string1) - strlen(string2); i++) {
+        char *newStr = new char[strlen(string2) + 1];
+
+        for (int j = 0; j < strlen(string2); j++) {
+            newStr[j] = string1[i + j];
+        }
+        newStr[strlen(string2) + 1] = '\0';
+
+
+        if (strcmp(newStr, string1) == 0) {
+            delete[] newStr;
+            return i;
+        }
+        delete[] newStr;
+    }
+
+    return -1;
+
+
+}
+
+int Multi_character_links::pos(Multi_character_links &sub) {
+
+    int len = length();
+    int len2 = sub.length();
+
+    char *allstr = new char[len];
+
+    int j = 0;
+    Link *temp = Head;
+
+    while (temp != nullptr) {
+
+        for (int i = 0; i < strlen(temp->data); i++) {
+            allstr[j + i] = temp->data[i];
+        }
+
+        j = j + strlen(temp->data);
+        temp = temp->Next;
+    }
+    allstr[len] = '\0';
+
+    char *substr = new char[len2];
+
+    j = 0;
+    temp = sub.Head;
+
+    while (temp != nullptr) {
+
+        for (int i = 0; i < strlen(temp->data); i++) {
+            substr[j + i] = temp->data[i];
+        }
+
+        j = j + strlen(temp->data);
+        temp = temp->Next;
+    }
+    substr[len2] = '\0';
+
+    return search_string(allstr, substr);
+
+}
+
+
+Multi_character_links &Multi_character_links::substr(unsigned int k, unsigned int n) {
+
+    int len = length();
+
+    if (k > len || n < k) {
+        Multi_character_links *Res;
+        return *Res;
+    }
+
+    char *substr;
+    char *allstr = new char[len];
+
+    if (n >= len) {
+        n = len;
+    }
+    substr = new char[n - k + 1];
+
+    int j = 0;
+    Link *temp = Head;
+
+    while (temp != nullptr) {
+
+        for (int i = 0; i < strlen(temp->data); i++) {
+            allstr[j + i] = temp->data[i];
+        }
+
+        j = j + strlen(temp->data);
+        temp = temp->Next;
+    }
+
+    allstr[len] = '\0';
+
+
+    memcpy(const_cast<char *>(substr), &allstr[k], n - k + 1);
+    substr[n - k + 1] = '\0';
+
+    delete[] allstr;
+
+    Multi_character_links *Res = new Multi_character_links(substr);
+
+    delete[] substr;
+
+    return *Res;
+
+
+}
+
+Multi_character_links &Multi_character_links::del(unsigned int k, unsigned int n) {
+    Multi_character_links *Res = new Multi_character_links;
+
+    int len = length();
+
+    if (n >= len) { n = len - 1; }
+
+    if (n - k == len || k > n) {
+        return *Res;
+    }
+
+    if (k == 0 && n < len) {
+        *Res = this->substr(n + 1, length());
+
+    } else {
+
+        *Res = this->substr(0, k - 1) + this->substr(n + 1, length());
+    }
+
+    return *Res;
+
+
 }

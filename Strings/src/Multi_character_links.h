@@ -42,11 +42,11 @@ public:
 
     unsigned int length();
 
-    int pos(Multi_character_links sub);
+    int pos(Multi_character_links &sub);
 
-    Multi_character_links substr(unsigned int k, unsigned int n);
+    Multi_character_links &substr(unsigned int k, unsigned int n);
 
-    Multi_character_links del(unsigned int k, unsigned int n);
+    Multi_character_links &del(unsigned int k, unsigned int n);
 
     void print();
 };

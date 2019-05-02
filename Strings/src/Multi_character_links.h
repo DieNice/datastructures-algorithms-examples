@@ -40,6 +40,8 @@ public:
 
     Multi_character_links &operator+(const char *const data);
 
+    friend Multi_character_links &operator+(const char *const data, Multi_character_links &obj);
+
     unsigned int length();
 
     int pos(Multi_character_links &sub);

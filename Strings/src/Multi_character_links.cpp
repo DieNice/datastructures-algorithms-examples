@@ -112,46 +112,18 @@ Multi_character_links::~Multi_character_links() {
 }
 
 Multi_character_links &Multi_character_links::operator=(const char *const data) {
-
-    unsigned int left = 0;
-    unsigned int right = 0;
-    unsigned int size = 0;
-
-    Head = nullptr;
-    Tail = nullptr;
-
-    while (data[left] != '\0') {
-
-
-        if (data[left] == ' ') {
-
-            while (data[right] == ' ' && data[right] != '\0') {
-                right++;
-            }
-
-        } else {
-            while (data[right] != ' ' && data[right] != '\0') {
-                right++;
-            }
-
-        }
-
-        size = right - left + 1;
-
-        char *substr = new char[size];
-
-
-        memcpy(substr, &data[left], size - 1);
-
-
-        substr[size] = '\0';
-
-        add_elem(substr, size);
-
-        left = right;
-
+    while (Head) {
+        Tail = Head->Next;
+        delete Head;
+        Head = Tail;
 
     }
+
+    Multi_character_links *Res = new Multi_character_links(data);
+
+    this->Head = Res->Head;
+    this->Tail = Res->Tail;
+
 }
 
 
@@ -165,8 +137,11 @@ Multi_character_links &Multi_character_links::operator=(Multi_character_links &d
 
     }
 
-    this->Head = data.Head;
-    this->Tail = data.Tail;
+    Multi_character_links *Res = new Multi_character_links(data);
+
+    this->Head = Res->Head;
+    this->Tail = Res->Tail;
+    return *Res;
 
 }
 
@@ -191,7 +166,7 @@ void Multi_character_links::print() {
 
 Multi_character_links &Multi_character_links::operator+(Multi_character_links &data) {
 
-    Multi_character_links *Res(this);
+    Multi_character_links *Res = new Multi_character_links(*this);
 
     Multi_character_links *Buf = new Multi_character_links(data);
 
@@ -215,7 +190,8 @@ Multi_character_links &Multi_character_links::operator+(Multi_character_links &d
 
 Multi_character_links &Multi_character_links::operator+(const char *const data) {
 
-    Multi_character_links *Res(this);
+
+    Multi_character_links *Res = new Multi_character_links(*this);
 
     Multi_character_links *Buf = new Multi_character_links(data);
 
@@ -224,6 +200,23 @@ Multi_character_links &Multi_character_links::operator+(const char *const data) 
 
     return *Res;
 }
+
+Multi_character_links &operator+(const char *const data, Multi_character_links &obj) {
+
+    Multi_character_links *Buf = new Multi_character_links(obj);
+
+    Multi_character_links *Res = new Multi_character_links(data);
+
+    if (Res->Head != nullptr) {
+        Res->Tail->Next = Buf->Head;
+        Res->Tail = Buf->Tail;
+    } else {
+        Res = Buf;
+    }
+
+    return *Res;
+};
+
 
 unsigned int Multi_character_links::length() {
     Link *temp = Head;
@@ -251,7 +244,7 @@ int search_string(char *string1, char *string2) {
         newStr[strlen(string2) + 1] = '\0';
 
 
-        if (strcmp(newStr, string1) == 0) {
+        if (strcmp(newStr, string2) == 0) {
             delete[] newStr;
             return i;
         }
@@ -309,8 +302,8 @@ Multi_character_links &Multi_character_links::substr(unsigned int k, unsigned in
 
     int len = length();
 
-    if (k > len || n < k) {
-        Multi_character_links *Res;
+    if (k >= len || n < k) {
+        Multi_character_links *Res = new Multi_character_links;
         return *Res;
     }
 
@@ -360,7 +353,8 @@ Multi_character_links &Multi_character_links::del(unsigned int k, unsigned int n
     if (n >= len) { n = len - 1; }
 
     if (n - k == len || k > n) {
-        return *Res;
+        delete Res;
+        return *Res = *this;
     }
 
     if (k == 0 && n < len) {

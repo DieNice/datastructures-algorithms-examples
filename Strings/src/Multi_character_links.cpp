@@ -230,7 +230,7 @@ unsigned int Multi_character_links::length() {
 }
 
 int search_string(char *string1, char *string2) {
-    if (strlen(string2) > strlen(string1)) { return -1; }
+    if (strlen(string2) > strlen(string1) || string2[0] == '\0') { return -1; }
 
     if ((strlen(string1) == strlen(string2)) && strcmp(string1, string2) == 0) { return 0; }
 
@@ -371,16 +371,15 @@ Multi_character_links &Multi_character_links::del(int k, int n) {
 void change(Multi_character_links &obj1, Multi_character_links &obj2, Multi_character_links &obj3) {
 
 
-    if (obj3.pos(obj2) == -1) {
-        int p = obj1.pos(obj2);
+    Multi_character_links res;
+    Multi_character_links buf = obj1;
 
-        Multi_character_links buf = obj1;
+    int p = buf.pos(obj2);
 
-        while (p != -1) {
-            buf = obj1.substr(0, p - 1) + obj3;
-            buf = buf + obj1.substr(p + obj2.length(), obj1.length());
-            obj1 = buf;
-            p = obj1.pos(obj2);
-        }
+    while (p != -1) {
+        res = res + buf.substr(0, p - 1) + obj3;
+        buf = buf.substr(p + obj2.length(), obj1.length());
+        p = buf.pos(obj2);
     }
+    obj1 = res + buf;
 };

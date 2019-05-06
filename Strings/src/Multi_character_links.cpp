@@ -112,12 +112,12 @@ Multi_character_links::~Multi_character_links() {
 }
 
 Multi_character_links &Multi_character_links::operator=(const char *const data) {
-    while (Head) {
+/*    while (Head) {
         Tail = Head->Next;
         delete Head;
         Head = Tail;
 
-    }
+    }*/
 
     Multi_character_links *Res = new Multi_character_links(data);
 
@@ -130,12 +130,12 @@ Multi_character_links &Multi_character_links::operator=(const char *const data) 
 Multi_character_links &Multi_character_links::operator=(Multi_character_links &data) {
 
 
-    while (Head) {
+/*    while (Head) {
         Tail = Head->Next;
         delete Head;
         Head = Tail;
 
-    }
+    }*/
 
     Multi_character_links *Res = new Multi_character_links(data);
 
@@ -174,7 +174,6 @@ Multi_character_links &Multi_character_links::operator+(Multi_character_links &d
 
         return *Buf;
     }
-
     if (Buf->Head == Buf->Tail && Buf->Head == nullptr) {
 
         return *Res;
@@ -298,11 +297,11 @@ int Multi_character_links::pos(Multi_character_links &sub) {
 }
 
 
-Multi_character_links &Multi_character_links::substr(unsigned int k, unsigned int n) {
+Multi_character_links &Multi_character_links::substr(int k, int n) {
 
     int len = length();
 
-    if (k >= len || n < k) {
+    if (k >= len || n < k || k < 0 || n < 0) {
         Multi_character_links *Res = new Multi_character_links;
         return *Res;
     }
@@ -331,28 +330,28 @@ Multi_character_links &Multi_character_links::substr(unsigned int k, unsigned in
     allstr[len] = '\0';
 
 
-    memcpy(const_cast<char *>(substr), &allstr[k], n - k + 1);
+    memcpy((substr), &allstr[k], n - k + 1);
     substr[n - k + 1] = '\0';
 
-    delete[] allstr;
+    //  delete[] allstr;
 
     Multi_character_links *Res = new Multi_character_links(substr);
 
-    delete[] substr;
+//    delete[] substr;
 
     return *Res;
 
 
 }
 
-Multi_character_links &Multi_character_links::del(unsigned int k, unsigned int n) {
+Multi_character_links &Multi_character_links::del(int k, int n) {
     Multi_character_links *Res = new Multi_character_links;
 
     int len = length();
 
     if (n >= len) { n = len - 1; }
 
-    if (n - k == len || k > n) {
+    if (n - k == len || k > n || k < 0 || n < 0) {
         delete Res;
         return *Res = *this;
     }
@@ -367,5 +366,21 @@ Multi_character_links &Multi_character_links::del(unsigned int k, unsigned int n
 
     return *Res;
 
-
 }
+
+void change(Multi_character_links &obj1, Multi_character_links &obj2, Multi_character_links &obj3) {
+
+
+    if (obj3.pos(obj2) == -1) {
+        int p = obj1.pos(obj2);
+
+        Multi_character_links buf = obj1;
+
+        while (p != -1) {
+            buf = obj1.substr(0, p - 1) + obj3;
+            buf = buf + obj1.substr(p + obj2.length(), obj1.length());
+            obj1 = buf;
+            p = obj1.pos(obj2);
+        }
+    }
+};

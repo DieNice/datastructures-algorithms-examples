@@ -46,12 +46,14 @@ public:
 
     int pos(Multi_character_links &sub);
 
-    Multi_character_links &substr(unsigned int k, unsigned int n);
+    Multi_character_links &substr(int k, int n);
 
-    Multi_character_links &del(unsigned int k, unsigned int n);
+    Multi_character_links &del(int k, int n);
 
     void print();
 };
+
+void change(Multi_character_links &obj1, Multi_character_links &obj2, Multi_character_links &obj3);
 
 
 #endif //STRINGS_MULTI_CHARACTER_LINKS_H

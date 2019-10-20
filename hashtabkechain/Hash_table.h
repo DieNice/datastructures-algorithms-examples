@@ -18,7 +18,7 @@ struct Record {
 
     Record();
 
-    Record(int, int, int, int, int);
+    Record(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 
 
 };

@@ -4,7 +4,7 @@
 
 #include "Hash_table.h"
 
-Record::Record(int a, int b, int c, int d, int e) {
+Record::Record(unsigned int a, unsigned int b, unsigned int c, unsigned int d, unsigned int e) {
     shtraf = a;
     number_avto = b;
     day = c;

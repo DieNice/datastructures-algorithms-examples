@@ -2,6 +2,7 @@
 // Created by pda on 16.10.19.
 //
 
+#include <cstring>
 #include "Hash_table.h"
 
 Record::Record(unsigned int a, unsigned int b, unsigned int c, unsigned int d, unsigned int e) {
@@ -14,6 +15,11 @@ Record::Record(unsigned int a, unsigned int b, unsigned int c, unsigned int d, u
 }
 
 Record::Record() {
+    shtraf = 0;
+    number_avto = 0;
+    day = 0;
+    month = 0;
+    year = 0;
     over = nullptr;
 }
 
@@ -39,8 +45,8 @@ Hash_table::Hash_table(unsigned int n) {
     if (n == 0) { sizetable = DEF; }
     else { sizetable = n; }
 
-    data = new Record[sizetable];
-    status = new bool[sizetable];
+    initialize(sizetable);
+
     count_of_added = 0;
 
     for (int i = 0; i < sizetable; ++i) {
@@ -208,8 +214,8 @@ std::ostream &operator<<(std::ostream &out, Hash_table &point) {
 
 Hash_table::Hash_table(const Hash_table &object) {
     this->sizetable = object.sizetable;
-    data = new Record[sizetable];
-    status = new bool[sizetable];
+    initialize(this->sizetable);
+
     count_of_added = 0;
 
     for (int i = 0; i < sizetable; i++) {
@@ -237,8 +243,7 @@ Hash_table &Hash_table::operator=(Hash_table const &object) {
     delete[] this->data;
     delete[] this->status;
 
-    data = new Record[sizetable];
-    status = new bool[sizetable];
+    initialize(this->sizetable);
     count_of_added = 0;
 
 
@@ -261,6 +266,12 @@ Hash_table &Hash_table::operator=(Hash_table const &object) {
 
     return *result;
 
+}
+
+void Hash_table::initialize(unsigned int) {
+    data = new Record[sizetable];
+    status = new bool[sizetable];
+    memset(status, 0, (size_t) sizetable);
 }
 
 Hash_table &Hash_table::operator+(const Hash_table &right) {

@@ -23,8 +23,7 @@ bool operator==(Record const &record1, Record const &record2) {
     if (record1.year != record2.year) { return !result; }
     if (record1.month != record2.month) { return !result; }
     if (record1.shtraf != record2.shtraf) { return !result; }
-    if (record1.number_avto != record2.number_avto) { return !result; }
-    return result;
+    return record1.number_avto != record2.number_avto == !result;
 }
 
 /*------------------------------------HashTable-----------*/
@@ -87,7 +86,7 @@ bool Hash_table::addRecChain(Record &myrec, unsigned int &pos) {
 
         bool flag = false;
 
-        while (flag != true) {
+        while (!flag) {
 
             if (nowptr->over == nullptr) {
                 nowptr->over = &myrec;
@@ -114,10 +113,10 @@ bool Hash_table::addRecChain(Record &myrec, unsigned int &pos) {
 }
 
 int Hash_table::add(Record &record) {
-    if (search(record) == true) { return -1; }
+    if (search(record)) { return -1; }
 
     unsigned int posrec = getHash(record) % sizetable;
-    if (status[posrec] == false) {
+    if (!status[posrec]) {
         data[posrec] = record;
         count_of_added++;
         status[posrec] = true;
@@ -128,7 +127,7 @@ int Hash_table::add(Record &record) {
 
 
 int Hash_table::remove(Record &record) {
-    if (search(record) == false) { return -1; }
+    if (!search(record)) { return -1; }
 
     unsigned int posrec = getHash(record) % sizetable;
     if (data[posrec] == record) {
@@ -143,7 +142,7 @@ int Hash_table::remove(Record &record) {
         Record *nowptr = &data[posrec];
         Record *slowptr = &data[posrec];
         bool flag = false;
-        while (flag != true) {
+        while (!flag) {
             nowptr = nowptr->over;
             if (*nowptr == record) {
                 if (nowptr->over == nullptr) {
@@ -176,7 +175,7 @@ int Hash_table::remove(Record &record) {
 std::ostream &operator<<(std::ostream &out, Hash_table &point) {
     out << "-----------------begin table----------------" << std::endl;
     for (int i = 0; i < point.sizetable; i++) {
-        if (point.status[i] == true) {
+        if (point.status[i]) {
             out << i << ":";
             out << "Штраф=";
             out << point.data[i].shtraf << "; Номер авто=";
@@ -245,7 +244,7 @@ Hash_table &Hash_table::operator=(Hash_table const &object) {
 
 
     for (int i = 0; i < object.sizetable; i++) {
-        if (object.status[i] != false) {
+        if (object.status[i]) {
             add(object.data[i]);
             result->add(object.data[i]);
             if (object.data[i].over != nullptr) {
@@ -270,7 +269,7 @@ Hash_table &Hash_table::operator+(const Hash_table &right) {
     Hash_table *result = new Hash_table(this->sizetable);
 
     for (int i = 0; i < right.sizetable; i++) {
-        if (right.status[i] != false) {
+        if (right.status[i]) {
             result->add(right.data[i]);
             if (right.data[i].over != nullptr) {
                 Record *nowptr = right.data[i].over;

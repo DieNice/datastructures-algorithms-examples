@@ -18,12 +18,11 @@ Record::Record() {
 }
 
 bool operator==(Record const &record1, Record const &record2) {
-    bool result = true;
-    if (record1.day != record2.day) { return !result; }
-    if (record1.year != record2.year) { return !result; }
-    if (record1.month != record2.month) { return !result; }
-    if (record1.shtraf != record2.shtraf) { return !result; }
-    return record1.number_avto != record2.number_avto == !result;
+    return record1.day == record2.day
+           && record1.year == record2.year
+           && record1.month == record2.month
+           && record1.shtraf == record2.shtraf
+           && record1.number_avto == record2.number_avto;
 }
 
 /*------------------------------------HashTable-----------*/

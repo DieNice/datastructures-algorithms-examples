@@ -31,9 +31,10 @@ class Hash_table {
 private:
     Record *data;
     bool *status;
-    int sizetable;
+    unsigned int sizetable;
     int count_of_added;
 
+    void initialize(unsigned int);
     unsigned int getHash(Record);
 
     bool search(Record);
@@ -60,7 +61,6 @@ public:
     Hash_table &operator+(const Record &right);
 
     friend std::ostream &operator<<(std::ostream &out, Hash_table &point);
-
 };
 
 #endif //HASHTABKECHAIN_HASH_TABLE_H

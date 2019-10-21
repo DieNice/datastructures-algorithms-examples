@@ -2,9 +2,10 @@
 // Created by pda on 16.10.19.
 //
 
+#include <cstring>
 #include "Hash_table.h"
 
-Record::Record(int a, int b, int c, int d, int e) {
+Record::Record(unsigned int a, unsigned int b, unsigned int c, unsigned int d, unsigned int e) {
     shtraf = a;
     number_avto = b;
     day = c;
@@ -14,17 +15,20 @@ Record::Record(int a, int b, int c, int d, int e) {
 }
 
 Record::Record() {
+    shtraf = 0;
+    number_avto = 0;
+    day = 0;
+    month = 0;
+    year = 0;
     over = nullptr;
 }
 
 bool operator==(Record const &record1, Record const &record2) {
-    bool result = true;
-    if (record1.day != record2.day) { return !result; }
-    if (record1.year != record2.year) { return !result; }
-    if (record1.month != record2.month) { return !result; }
-    if (record1.shtraf != record2.shtraf) { return !result; }
-    if (record1.number_avto != record2.number_avto) { return !result; }
-    return result;
+    return record1.day == record2.day
+           && record1.year == record2.year
+           && record1.month == record2.month
+           && record1.shtraf == record2.shtraf
+           && record1.number_avto == record2.number_avto;
 }
 
 /*------------------------------------HashTable-----------*/
@@ -41,8 +45,8 @@ Hash_table::Hash_table(unsigned int n) {
     if (n == 0) { sizetable = DEF; }
     else { sizetable = n; }
 
-    data = new Record[sizetable];
-    status = new bool[sizetable];
+    initialize(sizetable);
+
     count_of_added = 0;
 
     for (int i = 0; i < sizetable; ++i) {
@@ -87,7 +91,7 @@ bool Hash_table::addRecChain(Record &myrec, unsigned int &pos) {
 
         bool flag = false;
 
-        while (flag != true) {
+        while (!flag) {
 
             if (nowptr->over == nullptr) {
                 nowptr->over = &myrec;
@@ -114,10 +118,10 @@ bool Hash_table::addRecChain(Record &myrec, unsigned int &pos) {
 }
 
 int Hash_table::add(Record &record) {
-    if (search(record) == true) { return -1; }
+    if (search(record)) { return -1; }
 
     unsigned int posrec = getHash(record) % sizetable;
-    if (status[posrec] == false) {
+    if (!status[posrec]) {
         data[posrec] = record;
         count_of_added++;
         status[posrec] = true;
@@ -128,7 +132,7 @@ int Hash_table::add(Record &record) {
 
 
 int Hash_table::remove(Record &record) {
-    if (search(record) == false) { return -1; }
+    if (!search(record)) { return -1; }
 
     unsigned int posrec = getHash(record) % sizetable;
     if (data[posrec] == record) {
@@ -143,7 +147,7 @@ int Hash_table::remove(Record &record) {
         Record *nowptr = &data[posrec];
         Record *slowptr = &data[posrec];
         bool flag = false;
-        while (flag != true) {
+        while (!flag) {
             nowptr = nowptr->over;
             if (*nowptr == record) {
                 if (nowptr->over == nullptr) {
@@ -176,7 +180,7 @@ int Hash_table::remove(Record &record) {
 std::ostream &operator<<(std::ostream &out, Hash_table &point) {
     out << "-----------------begin table----------------" << std::endl;
     for (int i = 0; i < point.sizetable; i++) {
-        if (point.status[i] == true) {
+        if (point.status[i]) {
             out << i << ":";
             out << "Штраф=";
             out << point.data[i].shtraf << "; Номер авто=";
@@ -210,8 +214,8 @@ std::ostream &operator<<(std::ostream &out, Hash_table &point) {
 
 Hash_table::Hash_table(const Hash_table &object) {
     this->sizetable = object.sizetable;
-    data = new Record[sizetable];
-    status = new bool[sizetable];
+    initialize(this->sizetable);
+
     count_of_added = 0;
 
     for (int i = 0; i < sizetable; i++) {
@@ -239,13 +243,12 @@ Hash_table &Hash_table::operator=(Hash_table const &object) {
     delete[] this->data;
     delete[] this->status;
 
-    data = new Record[sizetable];
-    status = new bool[sizetable];
+    initialize(this->sizetable);
     count_of_added = 0;
 
 
     for (int i = 0; i < object.sizetable; i++) {
-        if (object.status[i] != false) {
+        if (object.status[i]) {
             add(object.data[i]);
             result->add(object.data[i]);
             if (object.data[i].over != nullptr) {
@@ -265,12 +268,18 @@ Hash_table &Hash_table::operator=(Hash_table const &object) {
 
 }
 
+void Hash_table::initialize(unsigned int sizetable) {
+    data = new Record[sizetable];
+    status = new bool[sizetable];
+    memset(status, 0, (size_t) sizetable);
+}
+
 Hash_table &Hash_table::operator+(const Hash_table &right) {
 
     Hash_table *result = new Hash_table(this->sizetable);
 
     for (int i = 0; i < right.sizetable; i++) {
-        if (right.status[i] != false) {
+        if (right.status[i]) {
             result->add(right.data[i]);
             if (right.data[i].over != nullptr) {
                 Record *nowptr = right.data[i].over;
